@@ -1,0 +1,32 @@
+services:
+  app:
+    image: node:24-alpine
+    container_name: svelte-openfinance-ai-management-app
+    env_file: .env
+    environment:
+      DB_HOST: database
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - $APP_PORT:$APP_PORT
+    command: npm run dev -- --port $APP_PORT --host 0.0.0.0
+    depends_on:
+      - database
+
+  database:
+    image: postgres:17-alpine
+    container_name: svelte-openfinance-ai-management-db
+    env_file: .env
+    environment:
+      POSTGRES_DB: $DB_NAME
+      PGPORT: $DB_PORT
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+    ports:
+      - $DB_PORT:$DB_PORT
+    volumes:
+      - svelte-openfinance-ai-management-db-data:/var/lib/postgresql/data
+
+volumes:
+  svelte-openfinance-ai-management-db-data:

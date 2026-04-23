@@ -11,7 +11,7 @@
 <div
 	class="flex h-screen items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 p-4"
 >
-	<Card.Root class="w-full max-w-md border-white/20 shadow-xl backdrop-blur-sm">
+	<Card.Root class="w-full max-w-lg border-white/20 shadow-xl backdrop-blur-sm">
 		<Card.Header class="space-y-1 text-center">
 			<Card.Title class="text-3xl font-bold tracking-tight">Entrar</Card.Title>
 			<Card.Description class="text-base">

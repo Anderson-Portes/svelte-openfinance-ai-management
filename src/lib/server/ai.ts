@@ -4,7 +4,7 @@ import { GOOGLE_API_KEY } from '$env/static/private';
 const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY || '');
 
 const model = genAI.getGenerativeModel({
-	model: 'gemini-2.0-flash-lite',
+	model: 'gemini-2.5-flash',
 	systemInstruction: `
     Você é o Consultor Financeiro IA do Vallo AI. 
     Seu objetivo é ajudar usuários a entenderem suas finanças com base em dados reais do Open Finance (Pluggy).

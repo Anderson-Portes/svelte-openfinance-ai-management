@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Sidebar from '$lib/components/ui/sidebar';
 	import { Button } from '$lib/components/ui/button';
-	import { LayoutDashboard, Wallet, LogOut } from 'lucide-svelte';
+	import { LayoutDashboard, Wallet, Sparkles, LogOut } from 'lucide-svelte';
 	import { page } from '$app/state';
 
 	let { children, data } = $props();
@@ -35,6 +35,17 @@
 										<a href="/dashboard/accounts" {...props}>
 											<Wallet class="mr-2 h-4 w-4" />
 											<span>Contas</span>
+										</a>
+									{/snippet}
+								</Sidebar.MenuButton>
+							</Sidebar.MenuItem>
+
+							<Sidebar.MenuItem>
+								<Sidebar.MenuButton isActive={page.url.pathname === '/dashboard/advisor'}>
+									{#snippet child({ props })}
+										<a href="/dashboard/advisor" {...props}>
+											<Sparkles class="mr-2 h-4 w-4" />
+											<span>Consultor IA</span>
 										</a>
 									{/snippet}
 								</Sidebar.MenuButton>

@@ -2,10 +2,7 @@ import { fetchUserAccounts } from '$lib/server/pluggy';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
-  // O hooks.server.ts já garante que se chegamos aqui, o user existe
   return {
-    user: locals.user,
-    // Passamos a promise sem o 'await' para habilitar o streaming no SvelteKit
     streamed: {
       accounts: fetchUserAccounts(locals.user!.id)
     }

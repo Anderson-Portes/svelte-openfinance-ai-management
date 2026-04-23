@@ -37,22 +37,19 @@
 
 	ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
+	let { data } = $props();
 	let accounts = $state<(Account & { transactions: Transaction[] })[]>([]);
 	let loading = $state(true);
 
-	const fetchAccounts = async () => {
-		try {
-			const response = await fetch('/api/pluggy/accounts');
-			const data = await response.json();
-			accounts = data;
-		} catch (error) {
-			console.error('Error fetching accounts:', error);
-		} finally {
+	// Sincroniza os dados do servidor quando chegarem (streaming)
+	$effect(() => {
+		data.streamed.accounts.then((accs) => {
+			accounts = accs;
 			loading = false;
-		}
-	};
-
-	onMount(fetchAccounts);
+		}).catch(() => {
+			loading = false;
+		});
+	});
 
 	// --- Derived Statistics ---
 	const totalBalance = $derived(accounts.reduce((acc, curr) => acc + curr.balance, 0));

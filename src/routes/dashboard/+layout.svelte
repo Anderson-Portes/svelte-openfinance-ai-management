@@ -19,7 +19,7 @@
 					<Sidebar.GroupContent>
 						<Sidebar.Menu>
 							<Sidebar.MenuItem>
-								<Sidebar.MenuButton isActive={page.url.pathname === '/dashboard'}>
+								<Sidebar.MenuButton isActive={String(page.url.pathname) === '/dashboard'}>
 									{#snippet child({ props })}
 										<a href="/dashboard" {...props}>
 											<LayoutDashboard class="mr-2 h-4 w-4" />
@@ -30,7 +30,7 @@
 							</Sidebar.MenuItem>
 
 							<Sidebar.MenuItem>
-								<Sidebar.MenuButton isActive={page.url.pathname === '/dashboard/accounts'}>
+								<Sidebar.MenuButton isActive={String(page.url.pathname) === '/dashboard/accounts'}>
 									{#snippet child({ props })}
 										<a href="/dashboard/accounts" {...props}>
 											<Wallet class="mr-2 h-4 w-4" />
@@ -41,7 +41,7 @@
 							</Sidebar.MenuItem>
 
 							<Sidebar.MenuItem>
-								<Sidebar.MenuButton isActive={page.url.pathname === '/dashboard/advisor'}>
+								<Sidebar.MenuButton isActive={String(page.url.pathname) === '/dashboard/advisor'}>
 									{#snippet child({ props })}
 										<a href="/dashboard/advisor" {...props}>
 											<Sparkles class="mr-2 h-4 w-4" />

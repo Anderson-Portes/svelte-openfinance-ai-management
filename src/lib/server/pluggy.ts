@@ -12,6 +12,17 @@ const client = new PluggyClient({
 
 export type AccountWithTransactions = Account & { transactions: Transaction[] };
 
+export async function createConnectToken() {
+  return await client.createConnectToken();
+}
+
+export async function savePluggyItem(userId: string, itemId: string) {
+  return await db.insert(pluggyItems).values({
+    userId,
+    pluggyItemId: itemId,
+  });
+}
+
 export async function fetchUserAccounts(userId: string): Promise<AccountWithTransactions[]> {
   try {
     const items = await db.select().from(pluggyItems).where(eq(pluggyItems.userId, userId));

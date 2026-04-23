@@ -16,7 +16,8 @@
 		TableRow
 	} from '$lib/components/ui/table';
 	import type { Account, Transaction } from 'pluggy-sdk';
-	import { onMount } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
+	import { deserialize } from '$app/forms';
 	import DashboardCharts from './DashboardCharts.svelte';
 
 	let { data } = $props();
@@ -35,32 +36,26 @@
 			return;
 		}
 
-		const response = await fetch('/api/pluggy/token');
-		const dataToken = await response.json();
-
-		const token = dataToken.accessToken;
-
-		if (!token) {
-			alert('Erro ao gerar token de acesso. Verifique os logs do servidor e suas chaves no .env');
-			return;
-		}
-
 		const pluggyConnect = new window.PluggyConnect({
-			connectToken: token,
+			connectToken: data.connectToken,
 			includeSandbox: true,
 			onSuccess: async ({ item }: { item: { id: string } }) => {
 				try {
-					await fetch('/api/pluggy/items', {
+					const formData = new FormData();
+					formData.append('itemId', item.id);
+
+					const response = await fetch('?/saveItem', {
 						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json'
-						},
-						body: JSON.stringify({ itemId: item.id })
+						body: formData
 					});
 
-					// Recarrega os dados (opcionalmente via invalidateAll)
-					const response = await fetch('/api/pluggy/accounts');
-					accounts = await response.json();
+					const result = deserialize(await response.text());
+
+					if (result.type === 'success') {
+						await invalidateAll();
+					} else {
+						console.error('Failed to save item via action');
+					}
 				} catch (error) {
 					console.error('Whoops! Error saving item... ', error);
 				}
@@ -85,7 +80,9 @@
 
 	{#await data.streamed.accounts}
 		<div class="flex h-64 items-center justify-center">
-			<div class="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+			<div
+				class="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"
+			></div>
 		</div>
 	{:then accountsResolved}
 		{#if accountsResolved.length > 0}
@@ -123,14 +120,18 @@
 				</CardContent>
 			</Card>
 		{:else}
-			<div class="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center">
+			<div
+				class="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center"
+			>
 				<h2 class="mb-2 text-xl font-semibold">Nenhuma conta conectada</h2>
-				<p class="mb-6 text-muted-foreground">Conecte sua primeira conta para ver suas estatísticas financeiras.</p>
+				<p class="mb-6 text-muted-foreground">
+					Conecte sua primeira conta para ver suas estatísticas financeiras.
+				</p>
 				<Button onclick={handleConnect}>Conectar Banco agora</Button>
 			</div>
 		{/if}
 	{:catch error}
-		<div class="p-4 border border-destructive/50 bg-destructive/10 text-destructive rounded-lg">
+		<div class="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-destructive">
 			Erro ao carregar dados financeiros: {error.message}
 		</div>
 	{/await}
